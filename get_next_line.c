@@ -99,30 +99,29 @@ static char *get_ton(int fd, char *acum_str)
 
 char *get_next_line(int fd)
 {
-char		*line;
-int			book;
-static int	i;
+	static char	*acum_str;
+	char		*actual_line;
 
-line = malloc(/*Tamaño memoria que no sé como saco*/);
-if (line == NULL)
-	return (NULL);
-book = read(fd, line, /*Tamaño memoria que no sé como saco*/);
-if (book == -1)
-	return (NULL);
-while (file != '\0')
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (read(fd,0,0) < 0)
 	{
-		if (file != '\n')
+		if (acum_str != NULL)
 		{
-			line = file[i];
-			i++;
+			free (acum_str);
+			acum_str = NULL;
 		}
-		else
-			return (line);
+		return (NULL);
 	}
+acum_str = get_ton(fd, acum_str);
+actual_line = get_this_line(acum_str);
+acum_str = get_line_out(acum_str);
+return (actual_line);
 }
 
-int main (void)
+/*int main (void)
 {
 	
 	return (0);
 }
+*/
