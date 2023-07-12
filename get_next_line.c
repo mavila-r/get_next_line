@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-
-char *get_line_out()
+char *get_line_out(char *acum_str)
 {
 	int		i;
 	int		j;
@@ -47,12 +44,56 @@ static char *get_this_line(char *acum_str)
 	int		i;
 
 	i = 0;
-	
+	if (acum_str[i] == 0)
+		return (NULL);
+	while (acum_str[i] != '\0' && acum_str[i] != '\n')
+		i++;
+	line = ft_calloc((i + 2), sizeof(char));
+	i = 0;
+	while (acum_str[i] != '\0' && acum_str[i] != '\n')
+		{
+			line[i] = acum_str[i];
+			i++;
+		}
+	if (acum_str[i] != '\0' && acum_str[i] == '\n')
+		line[i++] = '\n';
+	return (line);
 }
 
-static char *get_ton()
+static char *get_joint(char *acum_str, char *buff)
 {
-	
+	char *joint;
+	joined = ft_strjoin(acum_str, buff);
+	free (acum_str);
+	return (joint);
+}
+
+static char *get_ton(int fd, char *acum_str)
+{
+	char	*tmp;
+	int		read_char;
+
+	if (!acum_str)
+	{
+		acum_str = ft_calloc(1, sizeof(char));
+		tmp = ft_calloc((BUFFER_SIZE + 1), sizeof (char));
+		read_char = 1;
+		while (read_char > 0)
+			{
+				read_char = read(fd, tmp, BUFFER_SIZE);
+				if (read_char < 0)
+				{
+					free (tmp);
+					return (NULL);
+				}
+				tmp[read_char] = '\0';
+				acum_str = get_joint(acum_str, tmp);
+				if (ft_strchr(tmp, '\n'))
+					break ;
+			}
+		free (tmp);
+		return (acum_str);
+	}
 }
 
 
